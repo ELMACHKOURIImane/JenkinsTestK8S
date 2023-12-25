@@ -6,11 +6,11 @@ spec:
   replicas: 3
   selector:
     matchLabels:
-      app: springboot-app-main
+      app: springboot-app
   template:
     metadata:
       labels:
-        app: springboot-app-main
+        app: springboot-app
     spec:
       containers:
         - name: my-springboot-app
@@ -24,9 +24,9 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: springboot-app-main
-    k8s-app: springboot-app-main
-  name: springboot-app-main
+    app: springboot-app
+    k8s-app: springboot-app
+  name: springboot-app
 spec:
   ports:
     - name: http
@@ -35,4 +35,4 @@ spec:
       targetPort: 8085
   type: LoadBalancer
   selector:
-    app: springboot-app-main
+    app: springboot-app
