@@ -35,13 +35,6 @@ pipeline {
                 }
             }
         }
-        stage("Print YAML contents") {
-            steps {
-                script {
-                    sh "cat deployment.yaml"
-                }
-            }
-        }
         stage ("Deploy to K8S") {
             steps {
                 withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'K8S', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
