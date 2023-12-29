@@ -37,10 +37,26 @@ pipeline {
         }
         stage("Deploy to K8S") {
             steps {
-                withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'K8S', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
-                sh 'kubectl apply -f deployment.yaml'
+                script {
+                    def clusterName = 'myFirstCluster'
+                    def contextName = 'my-context'
+                    def credentialsId = 'K8S'
+                    def namespace = 'my-namespace'
+                    def restrictKubeConfigAccess = false
+                    def serverUrl = 'https://myfirstclu-myfirstresource-de497f-up15d38c.hcp.southcentralus.azmk8s.io'
+                    withKubeConfig(
+                        clusterName: clusterName,
+                        contextName: contextName,
+                        credentialsId: credentialsId,
+                        namespace: namespace,
+                        restrictKubeConfigAccess: restrictKubeConfigAccess,
+                        serverUrl: serverUrl
+                    ) {
+                        sh 'kubectl apply -f deployment.yaml'
+                    }
                 }
-             }
-         }
+            }
+        }
+
      }
 }
