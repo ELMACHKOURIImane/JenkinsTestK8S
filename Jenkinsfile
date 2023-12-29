@@ -1,62 +1,59 @@
 pipeline {
     agent any
-    tools {
-        maven '3.9.6'
-    }
+
     environment {
         registryName = "insurancerepo"
         registryCredential = 'ACR'
         registryUrl = 'insurancerepo.azurecr.io'
     }
+
     stages {
         stage('Checkout') {
             steps {
-                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/ELMACHKOURIImane/JenkinsTestK8S']])
+                // Your checkout steps
             }
         }
-        stage('Build maven ') {
+
+        stage('Build Maven') {
             steps {
                 sh 'mvn clean install'
             }
         }
-        stage('buid Image') {
+
+        stage('Build Image') {
             steps {
                 script {
                     dockerImage = docker.build registryName
                 }
             }
         }
-        stage('push to ACR') {
+
+        stage('Push to ACR') {
             steps {
                 script {
-                    docker.withRegistry("http://${registryUrl}", registryCredential) {
+                    withDockerRegistry([credentialsId: registryCredential, url: "http://${registryUrl}"]) {
                         dockerImage.push()
                     }
                 }
             }
         }
+
         stage("Deploy to K8S") {
             steps {
                 script {
-                    def clusterName = 'myFirstCluster'
-                    def contextName = 'my-context'
-                    def credentialsId = 'K8S'
-                    def namespace = 'my-namespace'
-                    def restrictKubeConfigAccess = false
-                    def serverUrl = 'https://myfirstclu-myfirstresource-de497f-up15d38c.hcp.southcentralus.azmk8s.io'
                     withKubeConfig(
-                        clusterName: clusterName,
-                        contextName: contextName,
-                        credentialsId: credentialsId,
-                        namespace: namespace,
-                        restrictKubeConfigAccess: restrictKubeConfigAccess,
-                        serverUrl: serverUrl
+                        caCertificate: '',
+                        clusterName: '',
+                        contextName: '',
+                        credentialsId: 'K8S',
+                        namespace: '',
+                        restrictKubeConfigAccess: false,
+                        serverUrl: ''
                     ) {
                         sh 'kubectl apply -f deployment.yaml'
                     }
                 }
             }
         }
-
-     }
+    }
 }
