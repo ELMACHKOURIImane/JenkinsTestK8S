@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: my-springboot-app
-          image: insurancerepo.azurecr.io/insurancerepo:68
+          image: insurancerepo.azurecr.io/insurancerepo:piplineK8S
           imagePullPolicy: Always
           ports:
             - containerPort: 8085

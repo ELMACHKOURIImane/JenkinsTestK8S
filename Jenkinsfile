@@ -7,6 +7,7 @@ pipeline {
         registryName = "insurancerepo"
         registryCredential = 'ACR'
         registryUrl = 'insurancerepo.azurecr.io'
+        pipelineName = 'piplineK8S'
     }
     stages {
         stage('Checkout') {
@@ -22,7 +23,7 @@ pipeline {
         stage('buid Image') {
             steps {
                 script {
-                    dockerImage = docker.build("${registryName}:${env.BUILD_ID}")
+                    dockerImage = docker.build("${registryName}:${pipelineName}")
                 }
             }
         }
