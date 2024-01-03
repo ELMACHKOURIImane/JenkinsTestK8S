@@ -22,7 +22,7 @@ pipeline {
         stage('buid Image') {
             steps {
                 script {
-                    dockerImage = docker.build registryName
+                    dockerImage = docker.build("${registryName}:${env.BUILD_ID}")
                 }
             }
         }
@@ -36,7 +36,7 @@ pipeline {
             }
         }
         stage ("Deploy to K8S") {
-                steps {
+       steps {
        withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'K8S', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
                  sh "kubectl apply -f deployment.yaml"
             }
